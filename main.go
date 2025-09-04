@@ -1,31 +1,22 @@
 package main
 
 import (
-	"context"
-	"fmt"
-	"log"
+	"nhatruong/firstGoBackend/config"
+	"nhatruong/firstGoBackend/routes"
 
-	"github.com/jackc/pgx/v5"
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	// Connection string
-	dsn := "postgres://admin:123456@localhost:5432/mydb"
+	// ConnectDB
+	config.ConnectDB()
 
-	// Connect DB
-	conn, err := pgx.Connect(context.Background(), dsn)
-	if err != nil {
-		log.Fatalf("Unable to connect to database: %v\n", err)
-	}
-	defer conn.Close(context.Background())
+	// Setup gin
+	router := gin.Default()
 
-	fmt.Println("✅ Connected to PostgreSql!")
+	// Register routes
+	routes.UserRoutes(router)
 
-	// Test Query
-	var greeting string
-	err = conn.QueryRow(context.Background(), "SELECT 'Hello from PostgreSql!'").Scan(&greeting)
-	if err != nil {
-		log.Fatalf("Query failed: %v\n", err)
-	}
-	fmt.Println(greeting)
+	// Run server
+	router.Run(":8080")
 }
