@@ -1,6 +1,12 @@
 package main
 
+import (
+	"log"
+	"nhatruong/firstGoBackend/src/server"
+)
+
 func main() {
-	// Load config
-	cfg, err := config
+	if err := server.Run(); err != nil {
+		log.Fatal(err)
+	}
 }

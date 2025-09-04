@@ -2,26 +2,22 @@ package db
 
 import (
 	"context"
-	"fmt"
 	"log"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-var DB *pgxpool.Pool
-
-func ConnectDB() {
-	// Connection string
-	dsn
-
-	// Connect DB
-	pool, err := pgxpool.New(context.Background(), dsn)
+func ConnectDB(dbURL string) *pgxpool.Pool {
+	pool, err := pgxpool.New(context.Background(), dbURL)
 	if err != nil {
-		log.Fatalf("Unable to connect to database: %v\n", err)
+		log.Fatal("❌ Faild to connect DB: ", err)
 	}
-	defer pool.Ping(context.Background())
 
-	fmt.Println("✅ Connected to PostgreSql!")
+	err = pool.Ping(context.Background())
+	if err != nil {
+		log.Fatal("❌ Failed to Ping DB: ", err)
+	}
 
-	DB = pool
+	log.Println("Connected to PostgreSQL!")
+	return pool
 }
