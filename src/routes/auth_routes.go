@@ -1,8 +1,6 @@
 package routes
 
 import (
-	"nhatruong/firstGoBackend/controllers"
-
 	"github.com/gin-gonic/gin"
 )
 

@@ -1,4 +1,4 @@
-package config
+package db
 
 import (
 	"context"
@@ -12,7 +12,7 @@ var DB *pgxpool.Pool
 
 func ConnectDB() {
 	// Connection string
-	dsn := "postgres://admin:123456@localhost:5432/mydb"
+	dsn
 
 	// Connect DB
 	pool, err := pgxpool.New(context.Background(), dsn)
