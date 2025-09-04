@@ -1,15 +1,19 @@
 package routes
 
 import (
-	"nhatruong/firstGoBackend/src/config"
+	"nhatruong/firstGoBackend/src/controllers"
 
 	"github.com/gin-gonic/gin"
-	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-func SetupRoutes(router *gin.Engine, db *pgxpool.Pool, cfg *config.Config) {
-	api := router.Group("/api")
+func SetupRoutes(authController *controllers.AuthController) *gin.Engine {
+	r := gin.Default()
 
-	// Auth routes
-	authController := controllers
+	api := r.Group("/api")
+	{
+		api.POST("/register", authController.Register)
+		api.POST("/login", authController.Login)
+	}
+
+	return r
 }

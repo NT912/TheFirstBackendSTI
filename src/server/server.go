@@ -1,34 +1,22 @@
 package server
 
 import (
-	"log"
 	"nhatruong/firstGoBackend/src/config"
+	"nhatruong/firstGoBackend/src/controllers"
 	"nhatruong/firstGoBackend/src/db"
+	"nhatruong/firstGoBackend/src/repository"
 	"nhatruong/firstGoBackend/src/routes"
-
-	"github.com/gin-gonic/gin"
+	"nhatruong/firstGoBackend/src/services"
 )
 
-func Run() error {
-	// Load config
-	cfg, err := config.LoadConfig()
-	if err != nil {
-		return err
-	}
+func Run() {
+	cfg := config.LoadConfig()
+	dbPool := db.ConnectDB(cfg.DBUrl)
 
-	dbPool, err := db.ConnectDB(cfg.DBURL)
-	if err != nil {
-		return err
-	}
-	defer dbPool.Close()
+	userRepo := repository.NewUserRepository(dbPool)
+	authSerive := services.NewAuthService(userRepo)
+	authController := controllers.NewAuthController(authSerive)
 
-	// Init router
-	router := gin.Default()
-
-	// Setup routes
-	routes.SetupRoutes(router, dbPool, cfg)
-
-	// Start server
-	log.Println("🚀 Server running on port: ", cfg.Port)
-	return router.Run(":" + cfg.Port)
+	r := routes.SetupRoutes(authController)
+	r.Run(":" + cfg.Port)
 }
