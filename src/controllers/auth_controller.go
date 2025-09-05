@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"nhatruong/firstGoBackend/src/services"
 	"nhatruong/firstGoBackend/src/utils"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 )
@@ -29,7 +30,7 @@ func (ac *AuthController) Register(c *gin.Context) {
 		return
 	}
 
-	err := ac.AuthService.Register(context.Background(), body.Name, body.Email, body.Password)
+	err := ac.AuthService.Register(context.Background(), strings.TrimSpace(body.Name), strings.TrimSpace(body.Email), body.Password)
 	if err != nil {
 		utils.Error(c, err.Error(), http.StatusBadRequest)
 		return
@@ -48,7 +49,7 @@ func (ac *AuthController) Login(c *gin.Context) {
 		return
 	}
 
-	user, err := ac.AuthService.Login(context.Background(), body.Email, body.Password)
+	user, err := ac.AuthService.Login(context.Background(), strings.TrimSpace(body.Email), body.Password)
 	if err != nil {
 		utils.Error(c, err.Error(), http.StatusUnauthorized)
 		return

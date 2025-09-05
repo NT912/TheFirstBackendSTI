@@ -3,6 +3,7 @@ package services
 import (
 	"context"
 	"errors"
+	"log"
 	"nhatruong/firstGoBackend/src/models"
 	"nhatruong/firstGoBackend/src/repository"
 
@@ -24,13 +25,18 @@ func (s *AuthService) Register(ctx context.Context, name, email, password string
 }
 
 func (s *AuthService) Login(ctx context.Context, email, password string) (*models.User, error) {
+	log.Printf("AuthService: Attempting to log in user with email: '%s'", email)
 	user, err := s.userRepo.FindByEmail(ctx, email)
 	if err != nil {
+		log.Printf("AuthService: Error finding user by email: %v", err)
 		return nil, errors.New("User not found")
 	}
 
+	log.Printf("AuthService: User found: %+v", user)
+
 	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
 	if err != nil {
+		log.Printf("AuthService: Invalid password for user %s", email)
 		return nil, errors.New("Invalid Password")
 	}
 
