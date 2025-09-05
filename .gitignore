@@ -1,1 +1,4 @@
 .history
+.env
+.air.toml
+/tmp
